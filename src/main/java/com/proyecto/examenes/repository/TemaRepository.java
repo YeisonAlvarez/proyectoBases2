@@ -35,19 +35,29 @@ public class TemaRepository {
 
     public List<Tema> listarTemas() {
         List<Tema> lista = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement("SELECT * FROM temas")) {
-            ResultSet rs = stmt.executeQuery();
+
+        String sql = "select * from temas";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            // Recorremos todos los registros del ResultSet
             while (rs.next()) {
+
                 Tema t = new Tema();
                 t.setId(rs.getLong("id"));
                 t.setNombre(rs.getString("nombre"));
                 t.setDescripcion(rs.getString("descripcion"));
                 t.setIdCurso(rs.getLong("id_curso"));
-                lista.add(t);
+                lista.add(t); // Agregamos el tema a la lista
             }
+
         } catch (SQLException e) {
+            // Mejor manejar el error con un log o lanzar excepción personalizada
+            System.err.println("Error al listar temas: " + e.getMessage());
             e.printStackTrace();
         }
         return lista;
     }
+
 }

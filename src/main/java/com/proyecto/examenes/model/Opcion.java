@@ -9,4 +9,5 @@ public class Opcion implements Serializable {
     private String texto;
     private String esCorrecta; // 'S' o 'N'
     private Long idPregunta;
+    private Long idSubPregunta;
 }

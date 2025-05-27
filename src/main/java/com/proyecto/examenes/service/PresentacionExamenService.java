@@ -19,7 +19,7 @@ public class PresentacionExamenService {
         );
     }
 
-    public boolean enviarRespuestas(RespuestaEstudianteDTO dto) {
+    public double enviarRespuestas(RespuestaEstudianteDTO dto) {
         double total = 0;
         for (RespuestaIndividualDTO r : dto.getRespuestas()) {
             try (CallableStatement stmt = connection.prepareCall("{ call registrar_respuesta(?, ?, ?, ?, ?) }")) {
@@ -33,21 +33,12 @@ public class PresentacionExamenService {
                 total += stmt.getDouble(5); // calificación individual
             } catch (SQLException e) {
                 e.printStackTrace();
+                return -1; // error
             }
         }
+       // se hace usuo del trg_validar_nota_resultado despues de INSERT OR UPDATE ON resultados (la nota no supere 5)
 
-        // Guardar nota total
-        try (CallableStatement stmt = connection.prepareCall("{ call guardar_resultado_examen(?, ?, ?, ?) }")) {
-            stmt.setLong(1, dto.getIdEstudiante());
-            stmt.setLong(2, dto.getIdExamen());
-            stmt.setDouble(3, total);
-            stmt.setString(4, dto.getIpOrigen());
-            stmt.execute();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
+        return total;
     }
+
 }

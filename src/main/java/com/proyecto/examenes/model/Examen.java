@@ -6,11 +6,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
-public class Quiz implements Serializable {
+public class Examen implements Serializable {
     private Long id;
     private String nombre;
     private String descripcion;
-    private String categoria;
+    private int idTema;
     private int totalPreguntasBanco;
     private int totalPreguntasExamen;
     private int duracionMinutos;

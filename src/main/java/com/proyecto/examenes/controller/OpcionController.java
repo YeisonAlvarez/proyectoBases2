@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/opciones")
 @RequiredArgsConstructor
@@ -18,7 +20,7 @@ public class OpcionController {
     public ResponseEntity<?> crearOpcion(@RequestBody Opcion opcion) {
         Long id = opcionRepository.crearOpcion(opcion);
         return id != null ?
-                ResponseEntity.ok("Opción creada con ID: " + id) :
-                ResponseEntity.status(500).body("Error al crear la opción");
+                ResponseEntity.ok(Map.of("id", id, "mensaje", "Opción creada correctamente")) :
+                ResponseEntity.status(500).body(Map.of("error", "Error al crear la opción"));
     }
 }

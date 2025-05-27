@@ -4,6 +4,8 @@ import com.proyecto.examenes.model.Pregunta;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class  PreguntaRepository {
@@ -41,4 +43,34 @@ public class  PreguntaRepository {
             return null;
         }
     }
+
+    public List<Pregunta> findPreguntasPorTema(Long idTema, int limite) {
+        List<Pregunta> lista = new ArrayList<>();
+        String sql = "SELECT * FROM preguntas WHERE id_tema = ? FETCH FIRST ? ROWS ONLY";
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setLong(1, idTema);
+            stmt.setInt(2, limite);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                Pregunta p = new Pregunta();
+                p.setId(rs.getLong("id"));
+                p.setTexto(rs.getString("texto"));
+                p.setTipo(rs.getString("tipo"));
+                p.setDificultad(rs.getString("dificultad"));
+                p.setPorcentaje((double) rs.getInt("porcentaje"));
+                p.setTiempoLimite(rs.getInt("tiempo_limite"));
+                p.setEsPublica(rs.getString("es_publica"));
+                p.setIdTema(rs.getLong("id_tema"));
+                lista.add(p);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return lista;
+    }
+
 }

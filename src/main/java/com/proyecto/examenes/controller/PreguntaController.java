@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/preguntas")
 @RequiredArgsConstructor
@@ -15,10 +17,26 @@ public class PreguntaController {
     private final PreguntaRepository preguntaRepository;
 
     @PostMapping
-    public ResponseEntity<?> crearPregunta(@RequestBody Pregunta pregunta) {
+    public ResponseEntity<Long> crearPregunta(@RequestBody Pregunta pregunta) {
         Long id = preguntaRepository.crearPregunta(pregunta);
-        return id != null ?
-                ResponseEntity.ok("Pregunta creada con ID: " + id) :
-                ResponseEntity.status(500).body("Error al crear la pregunta");
+        if (id != null) {
+            return ResponseEntity.ok(id);  // Aquí devuelve directamente el número
+        } else {
+            return ResponseEntity.status(500).build();
+        }
     }
+
+    @GetMapping("/tema/{idTema}")
+    public ResponseEntity<?> obtenerPreguntasPorTema(
+            @PathVariable Long idTema,
+            @RequestParam(defaultValue = "10") int limite) {
+
+        try {
+            var preguntas = preguntaRepository.findPreguntasPorTema(idTema, limite);
+            return ResponseEntity.ok(preguntas);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("error", "Error al obtener preguntas por tema"));
+        }
+    }
+
 }

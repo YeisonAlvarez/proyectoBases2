@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/examenes/preguntas")
 @RequiredArgsConstructor
@@ -17,8 +19,16 @@ public class ExamenPreguntaController {
     @PostMapping
     public ResponseEntity<?> asignarPregunta(@RequestBody ExamenPregunta ep) {
         boolean asignado = repository.asignarPregunta(ep);
-        return asignado ?
-                ResponseEntity.ok("Pregunta asignada correctamente") :
-                ResponseEntity.status(500).body("Error al asignar la pregunta");
+        if (asignado) {
+            return ResponseEntity.ok(Map.of("message", "Pregunta asignada correctamente"));
+        } else {
+            return ResponseEntity.status(500).body(Map.of("message", "Error al asignar la pregunta"));
+        }
     }
+
+    @GetMapping("/{idExamen}")
+    public ResponseEntity<?> obtenerExamenConPreguntas(@PathVariable Long idExamen) {
+        return ResponseEntity.ok(repository.obtenerExamenConPreguntas(idExamen));
+    }
+
 }

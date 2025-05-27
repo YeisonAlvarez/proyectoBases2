@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/examenes/presentar")
 @RequiredArgsConstructor
@@ -16,9 +18,11 @@ public class PresentacionExamenController {
 
     @PostMapping
     public ResponseEntity<?> presentar(@RequestBody RespuestaEstudianteDTO dto) {
-        boolean exito = service.enviarRespuestas(dto);
-        return exito ?
-                ResponseEntity.ok("Examen presentado con éxito") :
-                ResponseEntity.status(500).body("Error al presentar el examen");
+        double notaTotal = service.enviarRespuestas(dto); // Cambiar para que devuelva nota total
+        if (notaTotal >= 0) {
+            return ResponseEntity.ok(Map.of("notaTotal", notaTotal));
+        } else {
+            return ResponseEntity.status(500).body(Map.of("error", "Error al presentar el examen"));
+        }
     }
 }

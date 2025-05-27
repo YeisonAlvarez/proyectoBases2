@@ -18,7 +18,7 @@ public class SubpreguntaController {
     public ResponseEntity<?> crear(@RequestBody Subpregunta sub) {
         Long id = repository.crearSubpregunta(sub);
         return id != null
-                ? ResponseEntity.ok("Subpregunta creada con ID: " + id)
+                ? ResponseEntity.ok( id)
                 : ResponseEntity.status(400).body("Error: suma de porcentajes supera 100%");
     }
 }

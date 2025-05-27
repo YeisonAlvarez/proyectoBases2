@@ -22,7 +22,7 @@ public class PresentacionExamenService {
     public double enviarRespuestas(RespuestaEstudianteDTO dto) {
         double total = 0;
         for (RespuestaIndividualDTO r : dto.getRespuestas()) {
-            try (CallableStatement stmt = connection.prepareCall("{ call registrar_respuesta(?, ?, ?, ?, ?) }")) {
+            try (CallableStatement stmt = connection.prepareCall("{ call EXAMENES.registrar_respuesta(?, ?, ?, ?, ?) }")) {
                 stmt.setLong(1, dto.getIdEstudiante());
                 stmt.setLong(2, dto.getIdExamen());
                 stmt.setLong(3, r.getIdPregunta());

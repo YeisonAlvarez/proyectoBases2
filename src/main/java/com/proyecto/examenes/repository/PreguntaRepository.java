@@ -75,6 +75,7 @@ public class  PreguntaRepository {
         return lista;
     }
 
+
     public List<Pregunta> obtenerBancoDePreguntas(Long idTema, Long idProfesor) {
         List<Pregunta> lista = new ArrayList<>();
 
@@ -123,5 +124,6 @@ public class  PreguntaRepository {
             return false;
         }
     }
+
 
 }

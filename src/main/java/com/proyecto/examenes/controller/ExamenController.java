@@ -5,16 +5,18 @@ import com.proyecto.examenes.model.ExamenConEstado;
 import com.proyecto.examenes.model.ResultadoExamen;
 import com.proyecto.examenes.repository.ExamenRepository;
 import com.proyecto.examenes.repository.ResultadoRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.SQLException;
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/examenes")
 @RequiredArgsConstructor
+
 @CrossOrigin(origins = "http://localhost:4200")
 public class ExamenController {
 

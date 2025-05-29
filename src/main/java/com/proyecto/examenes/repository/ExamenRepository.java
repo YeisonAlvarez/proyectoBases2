@@ -1,6 +1,7 @@
 package com.proyecto.examenes.repository;
 
 import com.proyecto.examenes.model.Examen;
+
 import com.proyecto.examenes.model.ExamenConEstado;
 import com.proyecto.examenes.model.ResultadoExamen;
 import org.springframework.stereotype.Repository;
@@ -46,7 +47,9 @@ public class ExamenRepository {
     public List<Examen> buscarExamenesDisponibles(Long idEstudiante) {
 
         List<Examen> examenes = new ArrayList<>();
+
         String sql = "SELECT e.* FROM examenes e JOIN examen_grupo eg ON e.id = eg.id_examen JOIN grupo_estudiante ge ON eg.id_grupo = ge.id_grupo  WHERE ge.id_estudiante = ? ";
+
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setLong(1, idEstudiante);
@@ -76,6 +79,7 @@ public class ExamenRepository {
     }
 
 
+
     public List<ExamenConEstado> buscarExamenesConEstado(Long idEstudiante) throws SQLException {
         List<ExamenConEstado> examenes = new ArrayList<>();
 
@@ -102,5 +106,6 @@ public class ExamenRepository {
 
         return examenes;
     }
+
 
 }

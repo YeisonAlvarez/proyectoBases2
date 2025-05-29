@@ -1,6 +1,9 @@
 package com.proyecto.examenes.repository;
 
 import com.proyecto.examenes.model.Examen;
+
+import com.proyecto.examenes.model.ExamenConEstado;
+import com.proyecto.examenes.model.ResultadoExamen;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
@@ -44,7 +47,9 @@ public class ExamenRepository {
     public List<Examen> buscarExamenesDisponibles(Long idEstudiante) {
 
         List<Examen> examenes = new ArrayList<>();
-        String sql = "SELECT e.* FROM examenes e JOIN examen_grupo eg ON e.id = eg.id_examen JOIN grupo_estudiante ge ON eg.id_grupo = ge.id_grupo  WHERE ge.id_estudiante = ? " ;
+
+        String sql = "SELECT e.* FROM examenes e JOIN examen_grupo eg ON e.id = eg.id_examen JOIN grupo_estudiante ge ON eg.id_grupo = ge.id_grupo  WHERE ge.id_estudiante = ? ";
+
 
         try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setLong(1, idEstudiante);
@@ -72,5 +77,35 @@ public class ExamenRepository {
 
         return examenes;
     }
+
+
+
+    public List<ExamenConEstado> buscarExamenesConEstado(Long idEstudiante) throws SQLException {
+        List<ExamenConEstado> examenes = new ArrayList<>();
+
+        String sql = """
+                    SELECT e.id, e.nombre, e.descripcion,
+                           CASE WHEN r.id_examen IS NOT NULL THEN 1 ELSE 0 END AS presentado
+                    FROM examenes e
+                    LEFT JOIN resultados r ON e.id = r.id_examen AND r.id_estudiante = ?
+                    WHERE e.fecha_inicio <= SYSDATE AND e.fecha_fin >= SYSDATE
+                """;
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setLong(1, idEstudiante);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                ExamenConEstado ex = new ExamenConEstado();
+                ex.setId(rs.getLong("id"));
+                ex.setNombre(rs.getString("nombre"));
+                ex.setDescripcion(rs.getString("descripcion"));
+                ex.setPresentado(rs.getInt("presentado") == 1);
+                examenes.add(ex);
+            }
+        }
+
+        return examenes;
+    }
+
 
 }
